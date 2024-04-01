@@ -5,7 +5,7 @@
 [Please read the install instructions below](#Installation-Instructions)
 
 ## Example
-![[Alt text](https://github.com/Ikeue4/EngineProject/blob/main/Examples/Screenshot%202024-04-01%20204237.PNG?raw=true)
+![Alt text](Examples/Screenshot%202024-04-01%20204237.png?raw=true)
 
 ## Indtroduction
 
