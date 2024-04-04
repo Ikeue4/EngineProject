@@ -2,6 +2,7 @@ import math
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import numpy as np
+import time
 frames_list = []
 
 def slider(origin, current, step):
@@ -53,7 +54,12 @@ def draw_engine(Q_x,Q_y):
     ax1.scatter(x=0,y=0, s=50, color='purple')
 
 def animate(i, ax1, ax2, ax3, ax4, rpm_text):
-    global q, torque_values, angle_values, past_positions, temp_max, cycle_count, torque_values, angle_values, power_values, rpm_values, area_of_pisten, valve, psi_change, volume_values, psi_values
+    global q, torque_values, angle_values, past_positions, temp_max, cycle_count, torque_values, angle_values, power_values, rpm_values, area_of_pisten, valve, psi_change, volume_values, psi_values, last_time
+
+    current_time = time.time()
+    fps = 1 / (current_time - last_time)
+    last_time = current_time
+
     # Calculate positions
     E_x, E_y = radius * np.cos(q), radius * np.sin(q)
     a = np.sqrt(connector_rod ** 2 - (radius * np.sin(q)) ** 2)
@@ -69,7 +75,7 @@ def animate(i, ax1, ax2, ax3, ax4, rpm_text):
     ax1.clear()
 
     # Plot the past iterations
-    for pos in past_positions[-10:]:
+    for pos in past_positions[-5:]:
         ax1.plot([pos[1], pos[3]], [pos[0], pos[2]], color='gray', alpha=0.5)
 
     # Plot the current iteration
@@ -161,12 +167,10 @@ def animate(i, ax1, ax2, ax3, ax4, rpm_text):
     ax4.set_title('PSI vs. Iteration')
 
     # Add RPM text on the first graph
-    ax1.text(13, 11, f'RPM: {rpm:.2f}')
-    ax1.text(4,Q_x, f'volume:{volume:.2f}')
-    ax1.text(13,13, f'degrees:{math.degrees(theta):.2f}')
     ax1.text(13,12, f'valve = {valve}')
     ax1.text(13,10, f'Possiton:{(connector_rod*1.1+radius) - Q_x:.2f}')
     ax1.text(13,9, f'PSI:{psi_change:.2f}')
+    ax1.text(0, 0, f'FPS: {fps:.2f}')
 
     #Ploting other important stuff that stays the same
     draw_engine(Q_x, Q_y)
@@ -178,7 +182,7 @@ def animate(i, ax1, ax2, ax3, ax4, rpm_text):
     ax1.text(-15,-9, 'version: 0.1')
 
 # Set up plots
-fig = plt.figure(figsize=(18, 18))
+fig = plt.figure(figsize=(18,18))
 fig.set_facecolor('grey')
 
 # Subplot grid configuration
@@ -209,9 +213,15 @@ force = psi * psi_per_sqr * area_of_pisten
 valve = False
 psi_change = 0
 frames = 100
+last_time = time.time()
 temp_max = []
 cycle_count = 3  # Number of cycles you want to plot
 MAX_DATA_POINTS = 100
 
-ani = animation.FuncAnimation(fig, animate, fargs=(ax1, ax2, ax3, ax4, rpm_values), frames=frames, interval=100)
-plt.show()
+
+def run_animation():
+    ani = animation.FuncAnimation(fig, animate, fargs=(ax1, ax2, ax3, ax4, rpm_values), frames=frames, interval=100)
+    plt.show()
+
+if __name__ == "__main__":
+    run_animation()

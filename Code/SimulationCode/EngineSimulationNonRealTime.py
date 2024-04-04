@@ -179,7 +179,7 @@ def animate(i, ax1, ax2, ax3, ax4, rpm_text, frames_list):
 
     fig.canvas.draw()
     frame = np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8)
-    frame = frame.reshape(fig.canvas.get_width_height()[::-1] + (3,))
+    #frame = frame.reshape(fig.canvas.get_width_height()[::-1] + (3,))
     frames_list.append(frame)
 
 # Set up plots
@@ -221,4 +221,4 @@ MAX_DATA_POINTS = 100
 ani = animation.FuncAnimation(fig, animate, fargs=(ax1, ax2, ax3, ax4, rpm_values, frames_list), frames=frames, interval=100)
 plt.show()
 
-ani.save('animation.gif', writer='imagemagick', fps=30)
+ani.save('animation.gif', writer='imagemagick', fps=20)
